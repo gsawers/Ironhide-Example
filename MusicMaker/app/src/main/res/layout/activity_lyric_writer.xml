@@ -20,7 +20,7 @@
             android:inputType="textMultiLine"
             android:ems="9"
             android:id="@+id/editText"
-            style="@style/CodeFont"
+            
             android:layout_gravity="left|top" />
     </FrameLayout>
 
