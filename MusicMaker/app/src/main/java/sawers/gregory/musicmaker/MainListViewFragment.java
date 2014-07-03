@@ -2,8 +2,10 @@ package sawers.gregory.musicmaker;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,8 @@ public class MainListViewFragment extends ListFragment implements AbsListView.On
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,13 +79,15 @@ public class MainListViewFragment extends ListFragment implements AbsListView.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mListView = (ListView) inflater.inflate(R.layout.main_list_view, container, false);
+        mListView = (ListView)inflater.inflate(R.layout.main_list_view, container, false);
 
         // Set the adapter
        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
            @Override
            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               selectItem(position);
+
+               int itm = (Integer)parent.getItemAtPosition(position);
+               selectItem(itm);
            }
        });
 
@@ -89,7 +95,7 @@ public class MainListViewFragment extends ListFragment implements AbsListView.On
 
 
         mAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, mainList);
+                android.R.layout.simple_list_item_1,android.R.id.text1, mainList);
 
 
         mListView.setAdapter(mAdapter);
@@ -120,18 +126,25 @@ public class MainListViewFragment extends ListFragment implements AbsListView.On
         if (mListView != null) {
             mListView.setItemChecked(position, true);
         }
-        if (mListener != null) {
-            mListener.onMainMenuItemSelected(position);
+
+        if(position == 0){
+            Intent intent = new Intent(getActivity(),LyricWriter.class);
+            startActivity(intent);
         }
+
+
     }
 
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        selectItem(position);
+        super.onListItemClick(l, v, position, id);
+    }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            selectItem(position);
-        }
+
+
     }
 
     /**
