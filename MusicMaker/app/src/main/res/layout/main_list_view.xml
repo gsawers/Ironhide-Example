@@ -4,11 +4,13 @@
     android:layout_height="match_parent"
     android:id="@+id/mainlist"
     android:choiceMode="singleChoice"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0dp"
+    android:divider="@android:color/black"
+    android:dividerHeight="1dp"
     android:background="#ffff"
     style="@style/CodeFont"
-    tools:context="sawers.gregory.musicmaker.MainListViewFragment" />
+    tools:context="sawers.gregory.musicmaker.MainListViewFragment"
+    android:clickable="false"
+    android:drawSelectorOnTop="false" />
 
 
 

@@ -95,7 +95,7 @@ public class MainListViewFragment extends ListFragment implements AbsListView.On
 
 
         mAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1,android.R.id.text1, mainList);
+                android.R.layout.simple_list_item_2,android.R.id.text1, mainList);
 
 
         mListView.setAdapter(mAdapter);
