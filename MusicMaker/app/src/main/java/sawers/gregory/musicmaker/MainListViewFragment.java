@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
+
 import sawers.gregory.musicmaker.dummy.DummyContent;
 
 /**
@@ -92,10 +94,21 @@ public class MainListViewFragment extends ListFragment implements AbsListView.On
        });
 
         String[] mainList = getResources().getStringArray(R.array.main_screen_list);
+        String[] descriptions = getResources().getStringArray(R.array.main_screen_description);
+        Integer[] images = {R.drawable.ic_action_edit,R.drawable.ic_action_play,R.drawable.ic_action_import_export};
+
+       ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+
+       for(int i=0; i<mainList.length; i++){
+           MenuItem nxtItm = new MenuItem(images[i], mainList[i], descriptions[i]);
+           menuItems.add(nxtItm);
+       }
 
 
-        mAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_2,android.R.id.text1, mainList);
+
+
+        mAdapter = new CustomListAdapter(getActivity(),
+                R.layout.menu_item_layout,menuItems);
 
 
         mListView.setAdapter(mAdapter);

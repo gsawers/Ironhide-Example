@@ -20,6 +20,11 @@
         <item>Load Previous Lyrics</item>
 
     </string-array>
+    <string-array name="main_screen_description">
+        <item>Express your self</item>
+        <item>Write accompanying chord progressions</item>
+        <item>Load a previous piece</item>
+    </string-array>
 
 
 </resources>

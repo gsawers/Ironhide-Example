@@ -6,7 +6,7 @@
     android:choiceMode="singleChoice"
     android:divider="@android:color/black"
     android:dividerHeight="1dp"
-    android:background="#ffff"
+    android:background="#FFFF"
     style="@style/CodeFont"
     tools:context="sawers.gregory.musicmaker.MainListViewFragment"
     android:clickable="false"
