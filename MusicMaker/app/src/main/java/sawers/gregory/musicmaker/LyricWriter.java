@@ -3,6 +3,7 @@ package sawers.gregory.musicmaker;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,15 +22,25 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.AbstractSet;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import sawers.gregory.musicmaker.R;
 
 public class LyricWriter extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SaveLyricsFragment.SaveDialogListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+
+    private SaveLyricsFragment mLyricsFragment;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -39,45 +51,48 @@ public class LyricWriter extends Activity
 
     private String lyrics;
     private EditText editText;
+    private FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lyric_writer);
 
+
+        fm = getFragmentManager();
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                fm.findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                (DrawerLayout) findViewById(R.id.drawer_layout_writer));
 
+        //TODO: Change over from shared preferences to loading from whatever file was selected
         sharedPrefs = getSharedPreferences(getString(R.string.lyrics), Context.MODE_PRIVATE);
-        lyrics = sharedPrefs.getString(getString(R.string.lyrics_text), "");
+
 
         editText = (EditText) findViewById(R.id.editText);
+        if(getIntent().getFlags() != 69) {
+            lyrics = sharedPrefs.getString(getString(R.string.lyrics_text), "");
+            editText.setText(lyrics);
+        }
 
-        editText.setText(lyrics);
+
 
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+         if (position == 0) {
+             Intent intent = new Intent(this, MainActivity.class);
+             startActivity(intent);
+         }
 
-        if(position == 0){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-
-        else {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                    .commit();
-        }
     }
 
     public void onSectionAttached(int number) {
@@ -103,11 +118,11 @@ public class LyricWriter extends Activity
 
    @Override
    public void onDestroy(){
+
        lyrics = editText.getText().toString();
        sharedPrefs.edit()
                .putString(getString(R.string.lyrics_text), lyrics)
                .apply();
-
 
        super.onDestroy();
    }
@@ -134,47 +149,32 @@ public class LyricWriter extends Activity
         if (id == R.id.action_settings) {
             return true;
         }
+
+        if(id == R.id.save_lyrics){
+           DialogFragment lyricsFragment = new SaveLyricsFragment();
+           lyricsFragment.show(fm, "lyrics");
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+    public void onDialogPositiveClick(SaveLyricsFragment dialog, String filename){
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+        FileOutputStream outputStream;
+
+        lyrics = editText.getText().toString();
+
+        try{
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(lyrics.getBytes());
+            outputStream.close();
+
         }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_lyric_writer, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((LyricWriter) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+        catch(Exception e){
+            e.printStackTrace();
         }
     }
+
+
 
 }

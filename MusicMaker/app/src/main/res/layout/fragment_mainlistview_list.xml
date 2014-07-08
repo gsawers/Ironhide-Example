@@ -12,12 +12,4 @@
         android:focusableInTouchMode="false"
         android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@android:id/empty"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
-
 </FrameLayout>

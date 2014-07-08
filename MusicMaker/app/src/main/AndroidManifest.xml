@@ -20,6 +20,10 @@
             android:name=".LyricWriter"
             android:label="@string/title_activity_lyric_writer" >
         </activity>
+        <activity
+            android:name=".SavedLyricsActivity"
+            android:label="@string/title_activity_saved_lyrics" >
+        </activity>
     </application>
 
 </manifest>

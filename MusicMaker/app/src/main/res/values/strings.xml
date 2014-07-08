@@ -10,21 +10,49 @@
     <string name="action_example">Go</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_lyric_writer">LyricWriter</string>
-    <string name="hello_world">Hello world!</string>
     <string name="lyrics">AllLyrics</string>
     <string name="lyrics_text">lyrics1</string>
+    <string name="save_text">Save</string>
+    <string name="file_name">File Name</string>
+    <string name="file_list">File List</string>
+    <string name="new_lyrics">New</string>
+    <string name="title_activity_saved_lyrics">Load Lyrics</string>
 
     <string-array name="main_screen_list">
         <item>Lyric Writer</item>
         <item>Chord Progressions</item>
         <item>Load Previous Lyrics</item>
-
     </string-array>
     <string-array name="main_screen_description">
-        <item>Express your self</item>
+        <item>Write new lyrics</item>
         <item>Write accompanying chord progressions</item>
         <item>Load a previous piece</item>
     </string-array>
+    <string-array name="list_of_major_keys">
+        <item>A♭</item>
+        <item>B♭</item>
+        <item>B</item>
+        <item>C</item>
+        <item>C#</item>
+        <item>D</item>
+        <item>E♭</item>
+        <item>E</item>
+        <item>F</item>
+        <item>F#</item>
+        <item>G</item>
+    </string-array>
+    <string-array name="list_of_minor_keys">
+        <item>Am</item>
+        <item>B♭m</item>
+        <item>Cm</item>
+        <item>C#m</item>
+        <item>Dm</item>
+        <item>Em</item>
+        <item>Fm</item>
+        <item>F#m</item>
+        <item>Gm</item>
+    </string-array>
 
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
