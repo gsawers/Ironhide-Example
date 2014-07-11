@@ -176,7 +176,6 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
                     .apply();
 
             Intent intent = new Intent(getActivity(), LyricWriter.class);
-            intent.addFlags(69);
             startActivity(intent);
         }
         catch(Exception e){

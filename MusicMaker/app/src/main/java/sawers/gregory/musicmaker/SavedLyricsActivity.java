@@ -141,7 +141,6 @@ public class SavedLyricsActivity extends Activity
         else if(id == R.id.new_lyrics){
             DialogFragment createLyricsFragment = new CreateNewLyricsDialog();
             createLyricsFragment.show(fm, "createLyrics");
-
         }
         return super.onOptionsItemSelected(item);
     }

@@ -74,15 +74,13 @@ public class LyricWriter extends Activity
         sharedPrefs = getSharedPreferences(getString(R.string.lyrics), Context.MODE_PRIVATE);
 
         fileName = sharedPrefs.getString("Lyric File Name", "");
-
-
         editText = (EditText) findViewById(R.id.editText);
 
         if(getIntent().getFlags() != 69) {
             lyrics = sharedPrefs.getString(getString(R.string.lyrics_text), "");
             editText.setText(lyrics);
 
-            if(!fileName.equals("") || !lyrics.equals("")){
+            if(!fileName.equals("")){
                 saved = true;
             }
         }
