@@ -1,6 +1,7 @@
 package sawers.gregory.musicmaker;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -35,7 +37,7 @@ import sawers.gregory.musicmaker.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {@link }
  * interface.
  */
-public class SavedLyricListFragment extends ListFragment implements AbsListView.OnItemClickListener {
+public class SavedLyricListFragment extends ListFragment implements AbsListView.OnItemClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,22 +48,22 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
     private String mParam1;
     private String mParam2;
 
-    private String[] lyricList;
+    private ArrayList<String> lyricList;
 
     private SharedPreferences sharedPrefs;
 
-    private OnFragmentInteractionListener mListener;
+
 
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private ListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private ArrayAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
     public static SavedLyricListFragment newInstance(String param1, String param2) {
@@ -92,7 +94,14 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
         }
 
         sharedPrefs = getActivity().getSharedPreferences(getString(R.string.lyrics), Context.MODE_PRIVATE);
-        lyricList = getActivity().fileList();
+
+
+        String[] files = getActivity().fileList();
+
+        lyricList = new ArrayList<String>();
+        for(int i=0; i<files.length;i++)
+            lyricList.add(files[i]);
+
         // Log.d("First saved lyric", lyricList[0]);
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<String>(getActivity(),
@@ -106,6 +115,16 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
         mListView = (ListView) inflater.inflate(R.layout.saved_lyrics_list_view, container, false);
 
         mListView.setAdapter(mAdapter);
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                DialogFragment deleteLyricsDialog = DeleteSaveLyricsDialog.newInstance(position);
+                deleteLyricsDialog.show(getFragmentManager(), "selectKey");
+                return true;
+            }
+        });
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -126,25 +145,18 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
-
 
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 
-        String fileToOpen = lyricList[position];
+        String fileToOpen = lyricList.get(position);
         byte[] byteInput;
         String lyrics;
 
@@ -159,7 +171,12 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
                     .putString(getString(R.string.lyrics_text), lyrics)
                     .apply();
 
+            sharedPrefs.edit()
+                    .putString("Lyrics File Name", fileToOpen)
+                    .apply();
+
             Intent intent = new Intent(getActivity(), LyricWriter.class);
+            intent.addFlags(69);
             startActivity(intent);
         }
         catch(Exception e){
@@ -167,6 +184,30 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
         }
         super.onListItemClick(l, v, position, id);
     }
+
+
+
+
+    //TODO: Dynamically Update the screen after a new element is added
+    public void addElement(String name){
+        lyricList.add(name);
+        mAdapter.notifyDataSetChanged();
+        mListView.invalidate();
+
+    }
+
+    public void deleteElement(int position){
+        String fileToRmv = lyricList.get(position);
+        File dir = getActivity().getFilesDir();
+        File file = new File(dir, fileToRmv);
+
+        file.delete();
+
+        lyricList.remove(position);
+        mAdapter.notifyDataSetChanged();
+        mListView.invalidate();
+    }
+
 
 
 
@@ -181,21 +222,6 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
         if (emptyText instanceof TextView) {
             ((TextView) emptyView).setText(emptyText);
         }
-    }
-
-    /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
     }
 
 }

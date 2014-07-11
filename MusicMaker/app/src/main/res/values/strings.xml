@@ -17,6 +17,7 @@
     <string name="file_list">File List</string>
     <string name="new_lyrics">New</string>
     <string name="title_activity_saved_lyrics">Load Lyrics</string>
+    <string name="del_lyrics">Delete</string>
 
     <string-array name="main_screen_list">
         <item>Lyric Writer</item>
@@ -54,5 +55,7 @@
     </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_easter_egg">EasterEggActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

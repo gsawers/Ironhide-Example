@@ -3,25 +3,39 @@ package sawers.gregory.musicmaker;
 import android.app.Activity;
 
 import android.app.ActionBar;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import sawers.gregory.musicmaker.R;
+
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+
+import java.io.FileOutputStream;
+
 
 public class SavedLyricsActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, CreateNewLyricsDialog.CreateDialogListener
+          , DeleteSaveLyricsDialog.DeleteLyricDialogListener, GooglePlayServicesClient.ConnectionCallbacks,
+            GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -32,6 +46,10 @@ public class SavedLyricsActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    private FragmentManager fm;
+    private LocationClient mLocationClient;
+    private Location mCurrentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +67,19 @@ public class SavedLyricsActivity extends Activity
 
         ActionBar actionBar = getActionBar();
         actionBar.setTitle("Load Lyrics");
+
+        fm = getFragmentManager();
+
+        mLocationClient = new LocationClient(this, this, this);
+
+        if(GooglePlayServicesUtil.
+                isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {
+
+        }
+        else{
+            Log.d("Connection service", "Connection failed");
+        }
+
     }
 
     @Override
@@ -106,47 +137,116 @@ public class SavedLyricsActivity extends Activity
         if (id == R.id.action_settings) {
             return true;
         }
+
+        else if(id == R.id.new_lyrics){
+            DialogFragment createLyricsFragment = new CreateNewLyricsDialog();
+            createLyricsFragment.show(fm, "createLyrics");
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
 
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_savedlyriclist, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((SavedLyricsActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
+        mLocationClient.connect();
     }
+
+    @Override
+    protected void onStop() {
+        mLocationClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onDialogPositiveClick(CreateNewLyricsDialog dialog, String fileName) {
+        FileOutputStream outputStream;
+        mCurrentLocation = mLocationClient.getLastLocation();
+        mCurrentLocation = new Location("Verizon");
+
+        if(mCurrentLocation != null) {
+            mCurrentLocation.setAltitude(6723.0);
+        }
+        else{
+            Log.d("Null location", "Shits null");
+        }
+
+        try{
+            outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+            outputStream.close();
+
+            SavedLyricListFragment listFragment = (SavedLyricListFragment)fm.findFragmentById(R.id.saved_lyrics_list);
+            listFragment.addElement(fileName);
+            if(fileName.equals("Rocky Mountain High") && mCurrentLocation.hasAltitude() && mCurrentLocation.getAltitude() > 5280){
+                Intent intent = new Intent(this, EasterEggActivity.class);
+                startActivity(intent);
+
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void onDeleteLyricPositiveClick(DeleteSaveLyricsDialog dialog, int position){
+
+        SavedLyricListFragment listFragment = (SavedLyricListFragment)fm.findFragmentById(R.id.saved_lyrics_list);
+        listFragment.deleteElement(position);
+
+    }
+
+    @Override
+    public void onConnected(Bundle dataBundle){
+        Toast.makeText(this,"connected", Toast.LENGTH_SHORT).show();
+        mCurrentLocation = mLocationClient.getLastLocation();
+    }
+
+    @Override
+    public void onDisconnected() {
+        Toast.makeText(this, "Disconnected. Please re-connect.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+
+          /*
+         * Google Play services can resolve some errors it detects.
+         * If the error has a resolution, try sending an Intent to
+         * start a Google Play services activity that can resolve
+         * error.
+         */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(
+                        this,
+                        ConnectionResult.RESOLUTION_REQUIRED);
+                /*
+                * Thrown if Google Play services canceled the original
+                * PendingIntent
+                */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+        }
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location){
+
+        mCurrentLocation = location;
+
+    }
+
+
+
 
 }

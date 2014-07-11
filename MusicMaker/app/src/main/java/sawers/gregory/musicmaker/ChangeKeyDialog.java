@@ -4,14 +4,23 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 
 /**
@@ -22,7 +31,7 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  *
  */
-public class ChangeKeyDialog extends DialogFragment {
+public class ChangeKeyDialog extends DialogFragment  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,6 +42,10 @@ public class ChangeKeyDialog extends DialogFragment {
     private String mParam2;
 
     private ChangeKeyDialogListener mListener;
+
+    private SoundPool soundPool;
+
+    private View view;
 
 
     /**
@@ -57,23 +70,25 @@ public class ChangeKeyDialog extends DialogFragment {
     }
 
 
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater  = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.fragment_change_key_dialog, null);
+        soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+
+        view = inflater.inflate(R.layout.fragment_change_key_dialog, null);
 
         builder.setView(view)
                 .setTitle("Pick Song Key")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-//                        String fileName =  editText.getText().toString();
-//                        mListener.onDialogPositiveClick(SaveLyricsFragment.this,fileName);
+                        mListener.onChangeKeyPositiveClick(ChangeKeyDialog.this);
 
                     }
                 })
@@ -81,25 +96,16 @@ public class ChangeKeyDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         ChangeKeyDialog.this.getDialog().cancel();
                     }
+                })
+                .setItems(R.array.list_of_major_keys, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        playSound(which);
+                    }
                 });
+
         return builder.create();
 
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_change_key_dialog, container, false);
     }
 
 
@@ -113,11 +119,75 @@ public class ChangeKeyDialog extends DialogFragment {
         }
     }
 
+    public void playSound(int position){
+
+        int soundId;
+
+        Context context = getActivity();
+        AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+        float actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float volume = actualVolume/maxVolume;
+
+        MediaPlayer mPlayer;
+//        mPlayer.start();
+
+
+
+
+        switch(position){
+
+            case 0:
+                mPlayer = MediaPlayer.create(context, R.raw.aflat);
+                break;
+            case 1:
+                mPlayer = MediaPlayer.create(context, R.raw.anatural);
+                break;
+            case 2:
+                mPlayer = MediaPlayer.create(context, R.raw.bflat);
+                break;
+            case 3:
+                mPlayer = MediaPlayer.create(context, R.raw.bnatural);
+                break;
+            case 4:
+                mPlayer = MediaPlayer.create(context, R.raw.cnatural);
+                break;
+            case 5:
+                mPlayer = MediaPlayer.create(context, R.raw.csharp);
+                break;
+            case 6:
+                mPlayer = MediaPlayer.create(context, R.raw.dnatural);
+                break;
+            case 7:
+                mPlayer = MediaPlayer.create(context, R.raw.eflat);
+                break;
+            case 8:
+                mPlayer = MediaPlayer.create(context, R.raw.enaturallow);
+                break;
+            case 9:
+                mPlayer = MediaPlayer.create(context, R.raw.fnatural);
+                break;
+            case 10:
+                mPlayer = MediaPlayer.create(context, R.raw.fsharp);
+                break;
+            case 11:
+                mPlayer = MediaPlayer.create(context, R.raw.gnatural);
+                break;
+
+            default:
+                mPlayer = new MediaPlayer();
+                break;
+
+        }
+
+        mPlayer.start();
+    }
+
 
 
     public interface ChangeKeyDialogListener{
 
-        public void onDialogPositiveClick(SaveLyricsFragment dialog, String fileName);
+        public void onChangeKeyPositiveClick(ChangeKeyDialog dialog);
     }
 
     @Override

@@ -80,7 +80,7 @@ public class SaveLyricsFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                         String fileName =  editText.getText().toString();
-                        mListener.onDialogPositiveClick(SaveLyricsFragment.this,fileName);
+                        mListener.onDialogPositiveClick(fileName);
 
                     }
                 })
@@ -106,7 +106,7 @@ public class SaveLyricsFragment extends DialogFragment {
 
     public interface SaveDialogListener{
 
-        public void onDialogPositiveClick(SaveLyricsFragment dialog, String fileName);
+        public void onDialogPositiveClick(String fileName);
     }
 
 }

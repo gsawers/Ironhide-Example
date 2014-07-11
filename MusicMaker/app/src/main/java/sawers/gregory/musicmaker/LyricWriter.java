@@ -4,36 +4,31 @@ import android.app.Activity;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
+
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+
 
 import sawers.gregory.musicmaker.R;
 
 public class LyricWriter extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SaveLyricsFragment.SaveDialogListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SaveLyricsFragment.SaveDialogListener,
+            ChangeKeyDialog.ChangeKeyDialogListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -52,12 +47,16 @@ public class LyricWriter extends Activity
     private String lyrics;
     private EditText editText;
     private FragmentManager fm;
+    private boolean saved = false;
+    private String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lyric_writer);
+
+        setFinishOnTouchOutside(false);
 
 
         fm = getFragmentManager();
@@ -74,13 +73,19 @@ public class LyricWriter extends Activity
         //TODO: Change over from shared preferences to loading from whatever file was selected
         sharedPrefs = getSharedPreferences(getString(R.string.lyrics), Context.MODE_PRIVATE);
 
+        fileName = sharedPrefs.getString("Lyric File Name", "");
+
 
         editText = (EditText) findViewById(R.id.editText);
+
         if(getIntent().getFlags() != 69) {
             lyrics = sharedPrefs.getString(getString(R.string.lyrics_text), "");
             editText.setText(lyrics);
-        }
 
+            if(!fileName.equals("") || !lyrics.equals("")){
+                saved = true;
+            }
+        }
 
 
     }
@@ -151,14 +156,25 @@ public class LyricWriter extends Activity
         }
 
         if(id == R.id.save_lyrics){
-           DialogFragment lyricsFragment = new SaveLyricsFragment();
-           lyricsFragment.show(fm, "lyrics");
 
+            if(!saved) {
+                DialogFragment lyricsFragment = new SaveLyricsFragment();
+                lyricsFragment.show(fm, "lyrics");
+            }
+            else{
+                onDialogPositiveClick(fileName);
+            }
+
+        }
+
+        else if(id == R.id.key_change){
+            DialogFragment keyFragment = new ChangeKeyDialog();
+            keyFragment.show(fm, "selectKey");
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void onDialogPositiveClick(SaveLyricsFragment dialog, String filename){
+    public void onDialogPositiveClick(String filename){
 
         FileOutputStream outputStream;
 
@@ -168,11 +184,16 @@ public class LyricWriter extends Activity
             outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
             outputStream.write(lyrics.getBytes());
             outputStream.close();
+            Toast.makeText(this, "Lyrics Saved", Toast.LENGTH_SHORT).show();
 
         }
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void onChangeKeyPositiveClick(ChangeKeyDialog dialog){
+
     }
 
 

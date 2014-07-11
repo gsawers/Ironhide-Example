@@ -2,11 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mainlist"
+    android:id="@+id/saved_lyrics_list_view"
     android:choiceMode="singleChoice"
     android:divider="@android:color/black"
     android:dividerHeight="1dp"
     android:background="#FFFF"
     tools:context="sawers.gregory.musicmaker.SavedLyricListFragment"
     android:clickable="false"
+    android:longClickable="true"
     android:drawSelectorOnTop="false" />
+
+

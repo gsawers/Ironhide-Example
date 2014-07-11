@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:name="sawers.gregory.musicmaker.SavedLyricListFragment"
-        tools:layout="@layout/save_lyrics_list_view"/>
+        tools:layout="@layout/saved_lyrics_list_view"/>
 
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/navigation_drawer_width"
