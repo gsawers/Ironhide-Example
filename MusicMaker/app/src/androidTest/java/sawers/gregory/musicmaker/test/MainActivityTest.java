@@ -39,7 +39,6 @@ public class MainActivityTest extends TestFixture<MainActivity> {
                 .MainList.getItemAtPosition(0).checkChildView(MainScreenModel.lyricImage, ViewMatchers.isDisplayed())
                 .MainList.getItemAtPosition(1).isDisplayed()
                 .MainList.getItemAtPosition(2).checkChildView(MainScreenModel.lyricImage, ViewMatchers.isDisplayed());
-
     }
 
     @Test
@@ -48,7 +47,6 @@ public class MainActivityTest extends TestFixture<MainActivity> {
         mainScreen
                 .HomeButton.click()
                 .MainDrawerList.getItemAtPosition(0).performOnChildView(MainScreenModel.drawerItem, ViewActions.click());
-
     }
     @Test
     public void testClickOnNavDrawerOption1(){
@@ -86,8 +84,6 @@ public class MainActivityTest extends TestFixture<MainActivity> {
                 "Write it, cut it, paste it, save it,\n" +
                 "Load it, check it, quick - rewrite it,\n" )
                 .saveLyrics.click();
-
-
     }
 
     @Test

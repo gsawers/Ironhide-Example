@@ -26,17 +26,16 @@ public class LoadLyricsTests extends TestFixture<SavedLyricsActivity> {
         super.setUp();
         getActivity();
     }
-
     @Test
     public void testOpenLyrics(){
-
 
         loadModel
                 .lyricsList.getItemAtPosition(2).goesTo(LyricWriterModel.class).click()
                 .editText.clearText()
-                .editText.typeText("I'm sorry baby, you were the sun and moon to me. I'll never get over you. You'll never get over me.");
-
-
+                .editText.typeText("I'm sorry baby, you were the sun and moon to me. I'll never get over you. You'll never get over me.")
+                .saveLyrics.click()
+                .saveDialogText.typeText("Sun & Moon")
+                .saveButton.click();
     }
     @Test
     public void testCreateNewLyrics(){
@@ -46,6 +45,5 @@ public class LoadLyricsTests extends TestFixture<SavedLyricsActivity> {
                 .lyricNameText.clearText()
                 .lyricNameText.typeText("YYZ")
                 .confirmLyricsButton.click();
-
     }
 }

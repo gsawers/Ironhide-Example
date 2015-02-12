@@ -30,7 +30,7 @@ public class LyricWriterTest extends TestFixture<LyricWriter>{
     }
 
     @Test
-    public void testStartUp(){
+    public void test1StartUp(){
        lyricWriter
                 .editText.isDisplayed()
                 .saveLyrics.isDisplayed()
@@ -48,7 +48,6 @@ public class LyricWriterTest extends TestFixture<LyricWriter>{
                 .editText.withText("I bomb atomically, Socrates' philosophies\n" +
                 "And hypotheses can't define how I be droppin' these\n" +
                 "Mockeries, lyrically perform armed robbery");
-
     }
 
     @Test
@@ -59,7 +58,6 @@ public class LyricWriterTest extends TestFixture<LyricWriter>{
                 .editText.typeText("They broke the walls we guarded, but we don't care about it. We'll finish what we started")
                 .editText.withText("They broke the walls we guarded, but we don't care about it. We'll finish what we started")
                 .saveLyrics.click();
-
     }
     @Test
     public void testChangeKey() throws Exception{
@@ -68,7 +66,6 @@ public class LyricWriterTest extends TestFixture<LyricWriter>{
                 .changeKey.click()
                 .dialogList.getItemAt(1).click()
                 .changeKey.pause();
-
     }
 
 
