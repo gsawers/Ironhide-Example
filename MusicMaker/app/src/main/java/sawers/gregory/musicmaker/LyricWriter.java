@@ -68,7 +68,7 @@ public class LyricWriter extends Activity
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout_writer));
+                (DrawerLayout) findViewById(R.id.drawer_layout));
 
         //TODO: Change over from shared preferences to loading from whatever file was selected
         sharedPrefs = getSharedPreferences(getString(R.string.lyrics), Context.MODE_PRIVATE);

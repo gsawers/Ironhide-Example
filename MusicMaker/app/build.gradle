@@ -2,28 +2,33 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 20
-    buildToolsVersion "20.0.0"
-
+    buildToolsVersion '21.1.1'
     defaultConfig {
-        applicationId "sawers.gregory.musicmaker"
+        applicationId 'sawers.gregory.musicmaker'
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 20
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+
+    }
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'APK LICENSE.txt'
+    }
+    productFlavors {
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
     // You must install or update the Support Repository through the SDK manager to use this dependency.
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:support-v4:19.+'
-    compile 'com.google.android.gms:play-services:5.0.77'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.google.android.gms:play-services:4.4.52'
+
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.0'
+    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+    compile files('libs/Ironhide-2.0.0.jar')
 }

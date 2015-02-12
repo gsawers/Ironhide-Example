@@ -105,7 +105,7 @@ public class SavedLyricListFragment extends ListFragment implements AbsListView.
         // Log.d("First saved lyric", lyricList[0]);
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, lyricList);
+                R.layout.load_lyric_item, R.id.load_lyric_text_item, lyricList);
     }
 
     @Override

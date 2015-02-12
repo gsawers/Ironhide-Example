@@ -7,4 +7,5 @@
     android:dividerHeight="0dp"
     android:background="#cccc"
     tools:context="sawers.gregory.musicmaker.NavigationDrawerFragment"
+    android:id="@+id/nav_drawer_layout"
     android:clickable="false" />

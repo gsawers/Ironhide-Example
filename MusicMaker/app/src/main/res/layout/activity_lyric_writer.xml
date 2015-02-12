@@ -2,7 +2,7 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout_writer"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="sawers.gregory.musicmaker.LyricWriter">
@@ -10,7 +10,7 @@
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/lyric_writer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 

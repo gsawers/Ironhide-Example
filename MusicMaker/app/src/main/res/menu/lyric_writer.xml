@@ -7,8 +7,8 @@
         android:showAsAction="never" />
     <item android:id="@+id/key_change"
         android:title="Key"
-        android:showAsAction="withText|ifRoom"/>
+        android:showAsAction="withText|always"/>
     <item android:id="@+id/save_lyrics"
         android:title="@string/save_text"
-        android:showAsAction="withText|ifRoom"/>
+        android:showAsAction="withText|always"/>
 </menu>
